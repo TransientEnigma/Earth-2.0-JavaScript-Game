@@ -1,0 +1,141 @@
+﻿body {
+    color: white;
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+.allContent {
+    width: 1600px;
+    margin: 0px auto;
+    background-color: black;
+    padding: 0px;
+}
+header {
+    width: 99.4%;
+    height: 20px;
+    background-color: greenyellow;
+    text-align: center;
+    padding: 5px;
+    color: black;
+}
+input {
+    height: 15px;
+    width: 200px;
+    padding: 10px;
+    margin: 5px;
+    font-size: 20px;
+    text-align: center;
+}
+
+/******* Game Information top of screen******/
+.gameData {
+    display: flex;
+    flex-direction: row;
+    width: 1600px;
+    margin:0px;
+
+}
+.playerData {
+    width: 400px;
+    padding: 10px;
+    margin: 10px 0px 0px 130px;
+    font-size: 20px;
+    font-weight: bold;
+}
+.titleWithMessage {
+    display: flex;
+    flex-direction: column;
+
+    text-align:center;
+}
+.gameTitle {
+    width: 400px;
+    padding: 10px;
+    font-family:'Californian FB';
+    font-size: 40px;
+    font-weight: bold;
+    text-shadow: 10px 8px 10px #808080;
+    text-shadow: 0px 2px 10px yellow;
+    margin: 0px auto;
+    margin: 50px 0px 0px 60px;
+}
+.message{
+    width:550px;
+
+}
+.topScore {
+    width: 300px;
+    padding: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    margin: 50px 0px 0px 100px;
+}
+
+/*** End of Game Information ****/
+.lineUp {
+    display: flex;
+    flex-direction: row;
+    margin:0px;
+    padding:0px;
+}
+.lhsBanner {
+    width: 150px;
+    margin: 100px auto;
+    padding: 10px;
+}
+#ScreenFrame {
+
+    width: 1600px;
+    margin: 0px auto;
+}
+h2 {
+    text-align: center;
+}
+#canvas {
+    /*ad some space background to give it some detail*/
+   background-image: url("../IMAGE/StartScreen1000x600.png");
+    background-repeat:no-repeat;
+    /* makes the background visible */
+    background-color: rgba(255, 255, 255, 1);
+    /*the internal positioning is relative to the canvas position not to screen*/
+    /*position: relative;*/
+    /*enables us to overlap the canvas*/
+    float: left;
+    width: 1000px;
+    margin:-725px 157px;
+}
+
+.rhsBanner {
+    width: 150px;
+    margin: 150px auto;
+    padding: 10px;
+}
+.rhsBanner h3{
+    padding:3px;
+}
+.Controls {
+    display: flex;
+    flex-direction: row;
+    margin: 0px;
+    padding: 0px;
+}
+.audioControl{
+    width:600px;
+}
+.startButton input {
+    height: 50px;
+    width: 200px;
+    padding: 10px;
+    margin: 5px 0px 5px 450px;
+    color: black;
+    background: #917b5d;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+footer {
+    width: 99.4%;
+    height: 20px;
+    background-color: greenyellow;
+    text-align: center;
+    padding: 5px;
+    color: black;
+}

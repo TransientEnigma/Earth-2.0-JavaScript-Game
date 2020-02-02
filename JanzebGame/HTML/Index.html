@@ -1,0 +1,240 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Earth 2.0 Defender</title>
+    <link rel="stylesheet" href="../CSS/GameStyleSheet.css" />
+</head>
+<body>
+    <div class="allContent">
+        <header>Earth 2.0 Defender, Copyright &copy; 2019, Music and graphics created by Janzeb Masiano</header>
+        <div class="gameData">
+            <div class="playerData">
+
+                &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp;Player Information
+                <br />Score <input type="text" id="displayScore" value="" />
+                <br />Lives &nbsp;<input type="text" id="displayLives" value="" />
+            </div>
+            <!-- Note the a this game is intended to be played using Internet Explorer Browser -->
+            <div class="titleWithMessage">
+                <div class="gameTitle">
+                    Earth 2.0 Defender
+                </div>
+                <div class="message">
+
+                    <br />This game has been optimised for playing in Internet Explorer
+                </div>
+            </div>
+            <div class="topScore">
+                Top Score
+                <br /><input type="text" id="displayTopScore" value="0" />
+            </div>
+        </div>
+        <div class="lineUp">
+            <div class="lhsBanner">
+
+            </div>
+            <div id="ScreenFrame">
+
+                <!--Import the image for the window  -->
+                <img src="../IMAGE/Border1000x600.png" width="1300" height="860" />
+                <!--Define the canvas area, canvas is positioned relative to screenBorder div-->
+
+                <canvas id="canvas" width="1000" height="600"></canvas>
+                <div class="Controls">
+                    <div class="audioControl">
+                        <!-- specify the audio path and what controls should be displayed-->
+                        <audio controls loop id="music" src="../SOUND/JMasiano_RockLoop.mp3"></audio>
+                    </div>
+                    <div class="startButton">
+                        <!-- Start button-->
+                        <input type="button" id="newGame" onclick="StartGame()" value="Start Game" />
+                    </div>
+                </div>
+            </div>
+            <div class="rhsBanner">
+
+            </div>
+        </div>
+
+        <footer>De Montfort University, Multimedia Development IMAT2015_1920_501, Student E-mail: P2430705@my365.dmu.ac.uk</footer>
+    </div>
+    <!-- Reference path to external JS file-->
+    <script src="../SCRIPT/Spaceship.js"></script>
+    <script src="../SCRIPT/SpaceRock.js"></script>
+    <script src="../SCRIPT/Booster.js"></script>
+    <script src="../SCRIPT/Weapon.js"></script>
+    <script src="../SCRIPT/Setting.js"></script>
+    <script src="../SCRIPT/PowerUp.js"></script>
+    <script src="../SCRIPT/Collision.js"></script>
+    <script src="../SCRIPT/Hit.js"></script>
+    <script src="../SCRIPT/Player.js"></script>
+    <script src="../SCRIPT/Acceleration.js"></script>
+
+    <script>
+
+        //function is executed when page loads
+        function StartGame()
+        {
+
+            //craete a player object
+            newPlayer = new Player();
+            //define a variable called canvas used for HTML document canvas
+            var canvas = document.getElementById("canvas");
+            //set the background image of the canvas to space
+            canvas.style.backgroundImage = "url('../IMAGE/Space1000x600.png')";
+            //bring the music elemenet into the js code from the html
+            var music = document.getElementById("music");
+            //set the music volume to 50%
+            music.volume = 0.5;
+            // play the music
+            music.play();
+            //set the context to 2D, to access drawing tools
+            var context = canvas.getContext('2d');
+            //new instance of the spaceship
+            newSpaceship = new Spaceship();
+            //new SpaceRock object
+            newSpaceRock = new SpaceRock();
+            //new Booster object
+            newBooster = new Booster();
+            //new weapon object
+            newWeapon = new Weapon();
+            //new Booster object
+            newPowerUp = new PowerUp();
+            //create a collision object to check collisions
+            newCollision = new Collision();
+            //create a Hit object so we candraw on the object when its hit
+            newHit = new Hit();
+            //create an acceleration object to use the acceleration features
+            newAcceleration = new Acceleration();
+            //create give the spacerock acceleration (gravity)
+            newSpaceRock.giveGravity(newAcceleration);
+            //On variable set to true
+            var On = true;
+
+            //declare a counter variable for spacebar
+            var sbCounter = 0;
+            //defines the DrawFrame function which will draw the image
+            //brackets around function make it self executing
+            (function DrawFrame() {
+
+                    //set the displayScore value for displayScore element
+                    document.getElementById('displayScore').value = newPlayer.CalculatedScore();
+                    //set the displayLives value for displayLives element
+                    document.getElementById('displayLives').value = newPlayer.playerLives;
+
+
+                    if (newPlayer.playerLives > 0) {
+                        //check spaceship collision with space rock, if so reset spaceship to original location
+                        newCollision.checkRockCollision(newPlayer, newSpaceRock, newSpaceship);
+                        //check powerup collision fromt the powerup perspective
+                        newCollision.checkPowerUpCollision(newSpaceship, newPowerUp, newWeapon);
+                        //clear the canvas area
+                        context.clearRect(0, 0, canvas.width, canvas.height);
+                        //add a listener to listen for the keydown event (i.e. when a key is pressed)
+                        window.addEventListener('keydown', KeyboardEventHandler, false);
+                        //function to handle keyboard events
+                        function KeyboardEventHandler(event) {
+
+                            //when the FORWARD key is pressed move the spaceship forward
+                            if (event.keyCode == 39) {
+
+                                //give it some acceleration
+                                newAcceleration.ForwardAcceleration(0.000001);
+                                //Move the spaceship forward with (+ve acceleration)
+                                newSpaceship.moveForward(newAcceleration);
+                                newHit.keepHitting = false;
+                                /***** Booster comes on when moving forward *****/
+                                //pass the spaceship x,y to booster for drawing point
+                                newBooster.X = newSpaceship.X;
+                                newBooster.Y = newSpaceship.Y;
+                                //turn the booster on
+                                newBooster.boosterOn = On;
+                            }
+
+                            //when the BACKWARD key is pressed move the spaceship back
+                            if (event.keyCode == 37) {
+
+                                //move backward (0 acceleration)
+                                newSpaceship.moveBackward(newAcceleration);
+
+                            }
+                            //when the UP key is pressed move the spaceship up
+                            if (event.keyCode == 38) {
+
+                                //move upward (0 acceleration)
+                                newSpaceship.moveUpward(newAcceleration);
+                            }
+                            //when the DOWN key is pressed move the spaceship down
+                            if (event.keyCode == 40) {
+
+                                //move down (0 acceleration)
+                                newSpaceship.moveDownward(newAcceleration);
+                            }
+                            /******* Optimisation for internet explorer *********/
+                            sbCounter++;
+                            if (sbCounter > 5)
+                            {
+
+                                //when the SPACEBAR is pressed - fire weapon
+                                if (event.keyCode == 32)
+                                {
+                                    //Fire the weapon
+                                    newWeapon.FireWeapon = On;
+                                    //get the x and y co-rdonates from the spaceship to draw the weapon
+                                    newWeapon.X = newSpaceship.X;
+                                    newWeapon.Y = newSpaceship.Y;
+                                    newWeapon.draw(context);
+                                    newCollision.CheckWeaponCollision(newPlayer, newSpaceRock, newWeapon, newHit, context);
+                                }
+                                sbCounter = 0;
+                            }
+
+                        }
+                        newWeapon.draw(context);
+                        newHit.draw(context)
+                        //draw the spaceship
+                        newSpaceship.draw(context);
+
+                        //draw the rock
+                        newSpaceRock.draw(context);
+
+                        //draw the powerup
+                        newPowerUp.draw(context);
+
+                        //needed to put this here as the booster was blurry due to
+                        //drawing of booster before drawing of ship
+                        //draw the booster
+                        newBooster.draw(context);
+
+                        //draw the booster
+                        newBooster.draw(context);
+                        //after the booster is drawn, the following x and y ensure on the next loop the booster is drawn off screen
+                        newBooster.X = 1200;
+                        newBooster.Y = 700;
+
+                        //only draw the laser when we have the coordinates
+                        newWeapon.draw(context);
+                        //after the laser beam is applied and drawn, the following x and y ensure on the next loop ensures the laser beam is drawn off screen
+                        newWeapon.X = 1200;
+                        newWeapon.Y = 700;
+
+                        //loop back to DrawFrame() again
+                        window.requestAnimationFrame(DrawFrame);
+                    }
+                    else {
+                        var topScore = Player.prototype.CalculateTopScore(parseInt(document.getElementById('displayTopScore').value));
+                        //update the Top Score if Top Score is beaten
+                        document.getElementById('displayTopScore').value = topScore;
+                        //turn off the music
+                        music.pause();
+                        //display game over screen
+                        canvas.style.backgroundImage = "url('../IMAGE/GAMEOVER1000x600.png')";
+
+                    }
+
+            })();
+        }
+    </script>
+</body>
+</html>
